@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDWebCommunication_v2", "TDWebCommunication_v2\TDWebCommunication_v2.csproj", "{76C4F9F8-DBF1-496A-B6A5-60B0AED7285B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76C4F9F8-DBF1-496A-B6A5-60B0AED7285B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76C4F9F8-DBF1-496A-B6A5-60B0AED7285B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76C4F9F8-DBF1-496A-B6A5-60B0AED7285B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76C4F9F8-DBF1-496A-B6A5-60B0AED7285B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A74093B0-5CC7-4C0E-A30E-F02038DA7764}
+	EndGlobalSection
+EndGlobal
