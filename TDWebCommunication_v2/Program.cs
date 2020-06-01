@@ -88,6 +88,16 @@ namespace TDWebCommunication_v2
                                 lastAction.Remove();
                                 break;
 
+                            case "PripremiUtovar":
+                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija pripreme utovara! Akciju pokrenuo " + AR.TDShop.User.GetDisplayName(lastAction.Sender));
+                                if (!isServer)
+                                    break;
+
+                                PrebaciUPonudu(Convert.ToInt32(elements[1]));
+
+                                lastAction.Remove();
+                                break;
+
                             case "PosaljiOvogPartneraNaWeb":
                                 break;
 
@@ -447,6 +457,139 @@ namespace TDWebCommunication_v2
                 Thread.Sleep(2000);
             }
             catch(Exception ex)
+            {
+                Debug.Log(ex.ToString());
+            }
+        }
+        private static void PrebaciUPonudu(int PorudzbinaID)
+        {
+            try
+            {
+                Debug.Log("Ucitavam porudzbinu...");
+                AR.TDShop.Porudzbina p = new AR.TDShop.Porudzbina(PorudzbinaID);
+                Debug.Log("Ucitavam stavke porudzbine...");
+                p.UcitajStavke();
+
+                Debug.Log("Proveravam da li porudzbina ima stavke...");
+                if (p.Items == null)
+                {
+                    Debug.Log("Porudzbina nema stavke!");
+                    return;
+                }
+
+                int nu = 16;
+
+                Debug.Log("Definisem nacin uplate...");
+
+                Debug.Log("Kreiram dokument proracuna u komercijalnom...");
+                Debug.Log("VRDOK: 34");
+                Debug.Log("MAGACINID: " + p.MagacinID.ToString());
+                Debug.Log("PORUDZBINAID:" + p.PorudzbinaID);
+                Debug.Log("PPID: " + p.PPID);
+                Debug.Log("NUID: " + nu);
+
+                if (p.PPID == null && p.PPID <= 0)
+                    p.PPID = null;
+
+                int newDok = Komercijalno.Dokument.Add(34, p.MagacinID, "WEB: " + p.PorudzbinaID, p.PPID, nu);
+                Debug.Log("Kreiran novi proracun broj: " + newDok.ToString());
+
+
+                Debug.Log("Azuriranje statusa porudzbine da ceka uplatu...");
+                AR.TDShop.Porudzbina.SetStatus(p.PorudzbinaID, AR.TDShop.Porudzbina.PorudzbinaStatus.CekaUplatu);
+
+                if (newDok <= 0)
+                {
+                    Debug.Log("Error creating new document!");
+                    return;
+                }
+
+                Debug.Log("Azuriranje komentara u komercijalnom...");
+                List<string> op = new List<string>();
+                List<string> kom = new List<string>();
+
+                op.Add("Web User ID: " + p.UserID);
+                op.Add("Web Porudzbina: " + p.PorudzbinaID);
+
+                if (p.Tag.Dostava)
+                    op.Add("Dostaviti!!!!");
+
+                op.Add("");
+                op.Add("==============================");
+                op.Add("==============================");
+                op.Add("==============================");
+                op.Add("");
+
+                if (!string.IsNullOrWhiteSpace(p.Tag.KontaktMobilni))
+                {
+                    kom.Add("Kupac je ostavio kontakt: " + p.Tag.KontaktMobilni);
+                    op.Add("Kupac je ostavio kontakt: " + p.Tag.KontaktMobilni);
+                }
+
+                if (!string.IsNullOrWhiteSpace(p.Tag.AdresaIsporuke))
+                {
+                    kom.Add("Adresa isporuke: " + p.Tag.AdresaIsporuke);
+                    op.Add("Adresa isporuke: " + p.Tag.AdresaIsporuke);
+                }
+
+                if (!string.IsNullOrWhiteSpace(p.Tag.Napomena))
+                {
+                    kom.Add("Kupac je ostavio napomenu: " + p.Tag.Napomena);
+                    op.Add("Kupac je ostavio napomenu: " + p.Tag.Napomena);
+                }
+
+                if (!string.IsNullOrWhiteSpace(p.Tag.KomercijalnoInterniKomentar))
+                {
+                    op.Add("");
+                    op.Add("==============================");
+                    op.Add("======= Admin interni komentar =======");
+                    op.Add("==============================");
+                    op.Add("");
+                    op.Add(p.Tag.KomercijalnoInterniKomentar);
+                }
+
+                Komercijalno.Dokument.UpdateInterniKomentar(34, newDok, string.Join(Environment.NewLine, op));
+                Komercijalno.Dokument.UpdateKomentar(34, newDok, string.Join(Environment.NewLine, kom));
+                // p.InterniKomentar umesto u interni komentar staviti u komentar komercijalnog
+
+                Debug.Log("Pocinjem unos stavki...");
+                using (FbConnection con = new FbConnection(Buffer.ConnectionStrings.Komercijalno))
+                {
+                    con.Open();
+                    using (FbCommand cmd = new FbCommand("NAPRAVISTAVKU", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("VRDOK", 34);
+                        cmd.Parameters.AddWithValue("BRDOK", newDok);
+                        cmd.Parameters.Add("ROBAID", FbDbType.Integer);
+                        cmd.Parameters.Add("CENA_BEZ_PDV", FbDbType.Double);
+                        cmd.Parameters.Add("KOL", FbDbType.Double);
+                        cmd.Parameters.AddWithValue("RABAT", 0);
+
+                        foreach (AR.TDShop.Porudzbina.Item i in p.Items)
+                        {
+                            Debug.Log("Unosim stavku " + i.RobaID + "...");
+
+                            cmd.Parameters["ROBAID"].Value = i.RobaID;
+                            cmd.Parameters["CENA_BEZ_PDV"].Value = i.VPCena * (1 + (Komercijalno.Roba.GetPDV(i.RobaID) / 100));
+                            cmd.Parameters["KOL"].Value = i.Kolicina;
+
+                            cmd.ExecuteNonQuery();
+
+                            Debug.Log("Unesena stavka: " + i.RobaID.ToString());
+                        }
+
+                        Debug.Log("Povezujem dokument komercijalnog sa porudzbinom...");
+
+                        AR.TDShop.Porudzbina.SetBrDokKom(p.PorudzbinaID, newDok);
+                    }
+                }
+
+                Debug.Log("Zavrsen proces prebacivanja u ponudu!" + Environment.NewLine);
+                Thread.Sleep(2000);
+            }
+            catch (Exception ex)
             {
                 Debug.Log(ex.ToString());
             }
