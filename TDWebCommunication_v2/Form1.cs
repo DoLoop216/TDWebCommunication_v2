@@ -10,6 +10,7 @@ using AR;
 using MySql.Data.MySqlClient;
 using FirebirdSql.Data.FirebirdClient;
 using System.Threading;
+using System.Globalization;
 
 namespace TDWebCommunication_v2
 {
@@ -180,6 +181,34 @@ namespace TDWebCommunication_v2
             MessageBox.Show("TDOffice: " + Buffer.ConnectionStrings.TDOffice);
             MessageBox.Show("Web: " + Buffer.ConnectionStrings.Web);
             MessageBox.Show("Config: " + Buffer.ConnectionStrings.Config);
+        }
+
+        private void azurirajKataloskeBrojeveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("Da li sigurno zelite da pobucete kataloske brojeve iz komercijalnog na web?", "Potvrdi", MessageBoxButtons.YesNo);
+            if(dr == DialogResult.Yes)
+            {
+                List<Komercijalno.Roba> list = Komercijalno.Roba.List();
+
+                using(MySqlConnection con = new MySqlConnection(Buffer.ConnectionStrings.Web))
+                {
+                    con.Open();
+                    using(MySqlCommand cmd = new MySqlCommand("UPDATE ROBA SET KATBR = @KBR WHERE ROBAID = @RID", con))
+                    {
+                        cmd.Parameters.Add("@KBR", MySqlDbType.VarChar);
+                        cmd.Parameters.Add("@RID", MySqlDbType.Int32);
+
+                        foreach(Komercijalno.Roba r in list)
+                        {
+                            cmd.Parameters["@KBR"].Value = r.KatBr.Substring(0, 4);
+                            cmd.Parameters["@RID"].Value = r.ROBAID;
+
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            MessageBox.Show("Gotovo!");
         }
     }
 }
