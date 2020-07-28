@@ -67,10 +67,12 @@ namespace TDWebCommunication_v2
                     {
                         string[] elements = lastAction.Action.Split('|');
 
+                        AR.WebShop.User<AR.TDShop.UserCustomProperties> u = new AR.WebShop.User<AR.TDShop.UserCustomProperties>(lastAction.Sender);
+
                         switch (elements[0])
                         {
                             case "PovuciProizvodeUTDOffice":
-                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija povlacenja proizvoda u TDOffice! Akciju pokrenuo " + AR.TDShop.User.GetDisplayName(lastAction.Sender));
+                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija povlacenja proizvoda u TDOffice! Akciju pokrenuo " + u.DisplayName);
                                 if (!isServer)
                                     break;
                                 PovuciProizvodeUTDOffice();
@@ -79,7 +81,7 @@ namespace TDWebCommunication_v2
                                 break;
 
                             case "PosaljiPartnereNaWeb":
-                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija Slanja proizvoda na web! Akciju pokrenuo " + AR.TDShop.User.GetDisplayName(lastAction.Sender));
+                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija Slanja proizvoda na web! Akciju pokrenuo " + u.DisplayName);
                                 if (!isServer)
                                     break;
 
@@ -89,7 +91,7 @@ namespace TDWebCommunication_v2
                                 break;
 
                             case "PripremiUtovar":
-                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija pripreme utovara! Akciju pokrenuo " + AR.TDShop.User.GetDisplayName(lastAction.Sender));
+                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija pripreme utovara! Akciju pokrenuo " + u.DisplayName);
                                 if (!isServer)
                                     break;
 
@@ -102,7 +104,7 @@ namespace TDWebCommunication_v2
                                 break;
 
                             case "PretvoriUProracun":
-                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija prebacivanja porudzbine [" + elements[1].ToString() + "] u proracun!" + AR.TDShop.User.GetDisplayName(lastAction.Sender));
+                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija prebacivanja porudzbine [" + elements[1].ToString() + "] u proracun!" + u.DisplayName);
                                 if (!isServer)
                                     break;
 
@@ -112,7 +114,7 @@ namespace TDWebCommunication_v2
                                 break;
 
                             case "SENDSMS":
-                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija slanja sms-a sa tekstom '" + elements[2] + "' na broj " + elements[1] + "!" + AR.TDShop.User.GetDisplayName(lastAction.Sender));
+                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija slanja sms-a sa tekstom '" + elements[2] + "' na broj " + elements[1] + "!" + u.DisplayName);
                                 if (!isServer)
                                     break;
 
@@ -121,7 +123,7 @@ namespace TDWebCommunication_v2
                                 break;
 
                             case "PROVERISTANJE":
-                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija provere stanja po web porudzbini " + elements[1] + "! - " + AR.TDShop.User.GetDisplayName(lastAction.Sender));
+                                Debug.Log(DateTime.Now.ToString("[ dd/MM/yyyy - HH:mm ]") + " WEB: Pokrenuta je akcija provere stanja po web porudzbini " + elements[1] + "! - " + u.DisplayName);
                                 ProveriStanje();
                                 lastAction.Remove();
                                 break;

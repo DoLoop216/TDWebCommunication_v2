@@ -21,61 +21,7 @@ namespace TDWebCommunication_v2
 
         private void AnalizaCenaPremaNabavnim_Load(object sender, EventArgs e)
         {
-            List<AR.WebShop.Cena> PlatinumCene = AR.TDShop.Roba.GetVPCene(3);
-            List<AR.WebShop.Cena> IronCene = AR.TDShop.Roba.GetVPCene(0);
-
-            DataTable dt1 = AR.TDShop.Roba.List().ToDataTable();
-            dt1.Columns.Add("PLATINUM", typeof(double));
-            dt1.Columns.Add("IRON", typeof(double));
-
-            for (int i = 0; i < dt1.Rows.Count; i++)
-            {
-                int rid = (int)dt1.Rows[i]["ROBAID"];
-
-                dt1.Rows[i]["PLATINUM"] = PlatinumCene.Where(x => x.RobaID == rid).FirstOrDefault().VPCena;
-                dt1.Rows[i]["IRON"] = IronCene.Where(x => x.RobaID == rid).FirstOrDefault().VPCena;
-            }
-
-
-            DataTable dt2 = TDOffice.WebCena.List().ToDataTable();
-
-            DataColumn dc = dt1.Columns["ROBAID"];
-            DataColumn dc1 = dt2.Columns["ROBAID"];
-            dt1.PrimaryKey = new DataColumn[] { dc };
-            dt2.PrimaryKey = new DataColumn[] { dc1 };
-
-            dt1.Merge(TDOffice.WebCena.List().ToDataTable());
-
-            dataGridView1.DataSource = dt1;
-
-            dataGridView1.Columns["RobaID"].DisplayIndex = 0;
-            dataGridView1.Columns["KatBr"].DisplayIndex = 1;
-
-            //Ovde dolazi platinum cena
-
-            dataGridView1.Columns["PLATINUM"].DefaultCellStyle.Format = "#,##0.00  RSD";
-            dataGridView1.Columns["IRON"].DefaultCellStyle.Format = "#,##0.00  RSD";
-            dataGridView1.Columns["PoslednjaNabavnaCena"].DefaultCellStyle.Format = "#,##0.00  RSD";
-            dataGridView1.Columns["StandardnaVPCena"].DefaultCellStyle.Format = "#,##0.00  RSD";
-
-            dataGridView1.Columns["PLATINUM"].DefaultCellStyle.BackColor = Color.FromArgb(255, 91, 91);
-            dataGridView1.Columns["IRON"].DefaultCellStyle.BackColor = Color.FromArgb(255, 91, 91);
-            dataGridView1.Columns["PoslednjaNabavnaCena"].DefaultCellStyle.BackColor = Color.FromArgb(3, 169, 244);
-            dataGridView1.Columns["StandardnaVPCena"].DefaultCellStyle.BackColor = Color.FromArgb(3, 169, 244);
-
-            dataGridView1.Columns["PoslednjaNabavnaCena"].DisplayIndex = 3;
-            dataGridView1.Columns["StandardnaVPCena"].DisplayIndex = 4;
-
-            DefaultDGVSetup();
-
-
-            dataGridView1.Columns["Naziv"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-
-            dataGridView1.Sort(dataGridView1.Columns["NAZIV"], ListSortDirection.Ascending);
-            pretraga_cmb.SelectedIndex = 1;
-
-            toolStripStatusLabel1.Text = "Slogova: " + dataGridView1.Rows.Count;
+            MessageBox.Show("Not working!");
         }
 
         private void pretraga_cmb_SelectedIndexChanged(object sender, EventArgs e)

@@ -38,9 +38,10 @@
             this.porudzbineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uporediSaMPRacunimaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.proveraCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.proizvodiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.azurirajKataloskeBrojeveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.povuciSaSajtaUTDOfficeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,7 +130,8 @@
             // proizvodiToolStripMenuItem
             // 
             this.proizvodiToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.azurirajKataloskeBrojeveToolStripMenuItem});
+            this.azurirajKataloskeBrojeveToolStripMenuItem,
+            this.povuciSaSajtaUTDOfficeToolStripMenuItem});
             this.proizvodiToolStripMenuItem.Name = "proizvodiToolStripMenuItem";
             this.proizvodiToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.proizvodiToolStripMenuItem.Text = "Proizvodi";
@@ -137,9 +139,16 @@
             // azurirajKataloskeBrojeveToolStripMenuItem
             // 
             this.azurirajKataloskeBrojeveToolStripMenuItem.Name = "azurirajKataloskeBrojeveToolStripMenuItem";
-            this.azurirajKataloskeBrojeveToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.azurirajKataloskeBrojeveToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.azurirajKataloskeBrojeveToolStripMenuItem.Text = "Azuriraj kataloske brojeve";
             this.azurirajKataloskeBrojeveToolStripMenuItem.Click += new System.EventHandler(this.azurirajKataloskeBrojeveToolStripMenuItem_Click);
+            // 
+            // povuciSaSajtaUTDOfficeToolStripMenuItem
+            // 
+            this.povuciSaSajtaUTDOfficeToolStripMenuItem.Name = "povuciSaSajtaUTDOfficeToolStripMenuItem";
+            this.povuciSaSajtaUTDOfficeToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.povuciSaSajtaUTDOfficeToolStripMenuItem.Text = "Povuci sa sajta u TDOffice";
+            this.povuciSaSajtaUTDOfficeToolStripMenuItem.Click += new System.EventHandler(this.povuciSaSajtaUTDOfficeToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -174,6 +183,7 @@
         private System.Windows.Forms.ToolStripMenuItem proveraCsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem proizvodiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem azurirajKataloskeBrojeveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem povuciSaSajtaUTDOfficeToolStripMenuItem;
     }
 }
 
