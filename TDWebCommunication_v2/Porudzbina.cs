@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using AR;
+//using AR;
 
 namespace TDWebCommunication_v2
 {

@@ -40,8 +40,9 @@
             this.proveraCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.proizvodiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.azurirajKataloskeBrojeveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.povuciSaSajtaUTDOfficeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.shortToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,7 +52,8 @@
             this.ceneToolStripMenuItem,
             this.porudzbineToolStripMenuItem,
             this.proveraCsToolStripMenuItem,
-            this.proizvodiToolStripMenuItem});
+            this.proizvodiToolStripMenuItem,
+            this.shortToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(647, 24);
@@ -150,6 +152,13 @@
             this.povuciSaSajtaUTDOfficeToolStripMenuItem.Text = "Povuci sa sajta u TDOffice";
             this.povuciSaSajtaUTDOfficeToolStripMenuItem.Click += new System.EventHandler(this.povuciSaSajtaUTDOfficeToolStripMenuItem_Click);
             // 
+            // shortToolStripMenuItem
+            // 
+            this.shortToolStripMenuItem.Name = "shortToolStripMenuItem";
+            this.shortToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.shortToolStripMenuItem.Text = "short";
+            this.shortToolStripMenuItem.Click += new System.EventHandler(this.shortToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,6 +193,7 @@
         private System.Windows.Forms.ToolStripMenuItem proizvodiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem azurirajKataloskeBrojeveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem povuciSaSajtaUTDOfficeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem shortToolStripMenuItem;
     }
 }
 

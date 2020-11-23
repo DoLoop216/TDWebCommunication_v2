@@ -318,5 +318,56 @@ namespace TDWebCommunication_v2
                 }
             }
         }
+
+        private void shortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Pokrecem...");
+            try
+            {
+                List<AR.TDShop.Porudzbina> porudzbine = AR.TDShop.Porudzbina.List().Where(x => x.Datum > new DateTime(2020, 1, 1)).ToList();
+
+                using (FbConnection con = new FbConnection(Buffer.ConnectionStrings.Komercijalno))
+                {
+                    con.Open();
+                    FbCommand cmd = new FbCommand("UPDATE DOKUMENT SET ALIASU = @AU, OPISUPL = @OUPL WHERE VRDOK = 32 AND BRDOK = @BR", con);
+                    cmd.Parameters.Add("@AU", FbDbType.Integer);
+                    cmd.Parameters.Add("@OUPL", FbDbType.VarChar);
+                    cmd.Parameters.Add("@BR", FbDbType.Integer);
+
+                    foreach (AR.TDShop.Porudzbina p in porudzbine)
+                    {
+                        try
+                        {
+                            if (p.BrDokKom > 0)
+                            {
+                                AR.WebShop.User<AR.TDShop.UserCustomProperties> user = null;
+                                try
+                                {
+                                    user = new AR.WebShop.User<AR.TDShop.UserCustomProperties>(p.UserID);
+                                }
+                                catch(Exception)
+                                {
+                                }
+
+                                cmd.Parameters["@AU"].Value = p.UserID;
+                                cmd.Parameters["@OUPL"].Value = user == null ? "Jednokratni kupac" : user.Name;
+                                cmd.Parameters["@BR"].Value = p.BrDokKom;
+
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            MessageBox.Show("Zavrsio!");
+        }
     }
 }

@@ -67,7 +67,17 @@ namespace TDWebCommunication_v2
                     {
                         string[] elements = lastAction.Action.Split('|');
 
-                        AR.WebShop.User<AR.TDShop.UserCustomProperties> u = new AR.WebShop.User<AR.TDShop.UserCustomProperties>(lastAction.Sender);
+                        AR.WebShop.User<AR.TDShop.UserCustomProperties> u = null;
+                        
+                        try
+                        {
+                            u = new AR.WebShop.User<AR.TDShop.UserCustomProperties>(lastAction.Sender);
+                        }
+                        catch(Exception ex)
+                        {
+                            u = new AR.WebShop.User<AR.TDShop.UserCustomProperties>();
+                            u.DisplayName = "Unknown";
+                        }
 
                         switch (elements[0])
                         {
@@ -357,7 +367,16 @@ namespace TDWebCommunication_v2
                 if (p.PPID == null && p.PPID <= 0)
                     p.PPID = null;
 
-                int newDok = Komercijalno.Dokument.Add(32, p.MagacinID, "WEB: " + p.PorudzbinaID, p.PPID, nu);
+                AR.WebShop.User<AR.TDShop.UserCustomProperties> user = null;
+                try
+                {
+                    user = new AR.WebShop.User<AR.TDShop.UserCustomProperties>(p.UserID);
+                }
+                catch(Exception)
+                {
+
+                }
+                int newDok = Komercijalno.Dokument.Add(32, p.MagacinID, "WEB: " + p.PorudzbinaID, p.PPID, nu, p.UserID, user == null ? "Jednokratni kupac" : user.Name);
                 Debug.Log("Kreiran novi proracun broj: " + newDok.ToString());
 
 
@@ -493,7 +512,7 @@ namespace TDWebCommunication_v2
                 if (p.PPID == null && p.PPID <= 0)
                     p.PPID = null;
 
-                int newDok = Komercijalno.Dokument.Add(34, p.MagacinID, "WEB: " + p.PorudzbinaID, p.PPID, nu);
+                int newDok = Komercijalno.Dokument.Add(34, p.MagacinID, "WEB: " + p.PorudzbinaID, p.PPID, nu, null, null);
                 Debug.Log("Kreiran novi proracun broj: " + newDok.ToString());
 
 
@@ -773,7 +792,7 @@ namespace TDWebCommunication_v2
                     throw new ARException(ex.ToString());
                 }
             }
-            public static int Add(int VrDok, int MagacinID, string InterniBroj, int? PPID, int NUID)
+            public static int Add(int VrDok, int MagacinID, string InterniBroj, int? PPID, int NUID, int? aliasU, string opisupl)
             {
                 try
                 {
@@ -796,8 +815,8 @@ namespace TDWebCommunication_v2
                             VALUES
 
                             (@VRDOK, @BRDOK, @INTBROJ, 0, 0, @DATUM, 0, @MAGACINID, @PPID, NULL, 0, @DATUM, @NUID, 1, 'DIN', 1, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0,
-                            05, 0, NULL, (SELECT MTID FROM MAGACIN WHERE MAGACINID = @MAGACINID), -1, 0, 1, 0, 0, 0, NULL, NULL,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, @OPUPL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0,
+                            05, 0, NULL, (SELECT MTID FROM MAGACIN WHERE MAGACINID = @MAGACINID), -1, 0, 1, 0, 0, 0, NULL, @ALIASU,
                             0, @DATUM, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)", con))
                         {
                             cmd.Parameters.AddWithValue("@VRDOK", VrDok);
@@ -807,6 +826,8 @@ namespace TDWebCommunication_v2
                             cmd.Parameters.AddWithValue("@DATUM", DateTime.Now);
                             cmd.Parameters.AddWithValue("@PPID", (PPID == null) ? (object)DBNull.Value : PPID.ToString());
                             cmd.Parameters.AddWithValue("@NUID", NUID);
+                            cmd.Parameters.AddWithValue("@ALIASU", aliasU);
+                            cmd.Parameters.AddWithValue("@OPUPL", opisupl);
 
                             cmd.ExecuteNonQuery();
                             Debug.Log("Vracam novi broj dokumenta: " + (pos + 1).ToString());
